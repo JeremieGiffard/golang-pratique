@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -32,12 +34,16 @@ func NeedsLicense(kind string) bool {
 }
 func ChooseVehicle(p Params) {
 	var choiceMessage string
-	if p.option1 < p.option2 {
-		choiceMessage = p.option1 + " is clearly the better choice."
-	} else {
-		choiceMessage = p.option2 + " is clearly the better choice."
+	var licence string
+	if p.licence {
+		licence = "if you have a licence, "
 	}
-	println(choiceMessage)
+	if p.option1 < p.option2 {
+		choiceMessage = p.option1
+	} else {
+		choiceMessage = p.option2
+	}
+	fmt.Printf("%s%s is clearly the better choice.", licence, choiceMessage)
 }
 func CalculateResellPrice(originalPrice float64, age float64) {
 
