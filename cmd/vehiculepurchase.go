@@ -4,15 +4,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type Params struct {
+	option1, option2 string
+	licence          bool
+}
+
 var vehiculepurchase = &cobra.Command{
 	Use:   "vehiculepurchase <type of vehicule> <name of vehicule1> <name of vehicule2> ",
 	Short: "vehiculepurchase <type of vehicule> <name of vehicule1> <name of vehicule2> ",
 	Long:  "example : vehiculepurchase car toyota renault",
 	Run: func(cmd *cobra.Command, args []string) {
 		if NeedsLicense(args[0]) {
-			println("If you have a licence, " + ChooseVehicle(args[1], args[2]))
+			ChooseVehicle(Params{option1: args[1], option2: args[2], licence: true})
 		} else {
-			println(ChooseVehicle(args[1], args[2]))
+			ChooseVehicle(Params{option1: args[1], option2: args[2]})
 		}
 
 	},
@@ -25,14 +30,14 @@ func NeedsLicense(kind string) bool {
 	}
 	return doNeedLicence
 }
-func ChooseVehicle(option1 string, option2 string) string {
+func ChooseVehicle(p Params) {
 	var choiceMessage string
-	if option1 < option2 {
-		choiceMessage = option1 + " is clearly the better choice."
+	if p.option1 < p.option2 {
+		choiceMessage = p.option1 + " is clearly the better choice."
 	} else {
-		choiceMessage = option2 + " is clearly the better choice."
+		choiceMessage = p.option2 + " is clearly the better choice."
 	}
-	return choiceMessage
+	println(choiceMessage)
 }
 func CalculateResellPrice(originalPrice float64, age float64) {
 
