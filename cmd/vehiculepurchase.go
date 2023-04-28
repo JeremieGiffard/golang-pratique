@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/spf13/cobra"
 )
@@ -13,11 +14,15 @@ type Params struct {
 
 var vehiculepurchase = &cobra.Command{
 	Use:   "vehiculepurchase <type of vehicule> <name of vehicule1> <name of vehicule2> ",
-	Short: "vehiculepurchase <type of vehicule> <name of vehicule1> <name of vehicule2> ",
-	Long:  "example : vehiculepurchase car toyota renault",
+	Short: "vehiculepurchase <type of vehicule> <name of vehicule1> <name of vehicule2> \n Or vehiculepurchase <price> <age> --sell=true",
+	Long:  "example : vehiculepurchase car toyota renault \n example with Flag sell : vehiculepurchase 100 2 --sell=true",
 	Run: func(cmd *cobra.Command, args []string) {
-
-		ChooseVehicle(Params{option1: args[1], option2: args[2], licence: NeedsLicense(args[0])})
+		sell, _ := cmd.Flags().GetBool("sell")
+		if sell {
+			CalculateResellPrice(args[0], args[1])
+		} else {
+			ChooseVehicle(Params{option1: args[1], option2: args[2], licence: NeedsLicense(args[0])})
+		}
 
 	},
 }
@@ -42,20 +47,23 @@ func ChooseVehicle(p Params) {
 	}
 	fmt.Printf("%s%s is clearly the better choice.", licence, choiceMessage)
 }
-func CalculateResellPrice(originalPrice float64, age float64) {
+func CalculateResellPrice(originalPrice string, age string) {
+	floatOriginalPrice, _ := strconv.ParseFloat(originalPrice, 64)
+	FloatAge, _ := strconv.ParseFloat(age, 64)
 	var calculatedPrice float64
-	if age < 3 {
-		calculatedPrice = originalPrice * 0.8
-	} else if age >= 3 && age < 10 {
-		calculatedPrice = originalPrice * 0.3
+	if FloatAge < 3 {
+		calculatedPrice = floatOriginalPrice * 0.8
+	} else if FloatAge >= 3 && FloatAge < 10 {
+		calculatedPrice = floatOriginalPrice * 0.7
 	} else {
-		calculatedPrice = originalPrice * 0.5
+		calculatedPrice = floatOriginalPrice * 0.5
 	}
-	fmt.Printf("%f estimated price.", calculatedPrice)
+	fmt.Printf("%geuro estimated price.", calculatedPrice)
 
 }
 
 func init() {
 	rootCmd.AddCommand(vehiculepurchase)
+	vehiculepurchase.PersistentFlags().Bool("sell", false, "sell my vehicle")
 
 }
