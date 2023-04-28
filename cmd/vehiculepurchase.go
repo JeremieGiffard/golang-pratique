@@ -16,11 +16,8 @@ var vehiculepurchase = &cobra.Command{
 	Short: "vehiculepurchase <type of vehicule> <name of vehicule1> <name of vehicule2> ",
 	Long:  "example : vehiculepurchase car toyota renault",
 	Run: func(cmd *cobra.Command, args []string) {
-		if NeedsLicense(args[0]) {
-			ChooseVehicle(Params{option1: args[1], option2: args[2], licence: true})
-		} else {
-			ChooseVehicle(Params{option1: args[1], option2: args[2]})
-		}
+
+		ChooseVehicle(Params{option1: args[1], option2: args[2], licence: NeedsLicense(args[0])})
 
 	},
 }
