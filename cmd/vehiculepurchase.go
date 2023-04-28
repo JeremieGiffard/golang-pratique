@@ -46,6 +46,15 @@ func ChooseVehicle(p Params) {
 	fmt.Printf("%s%s is clearly the better choice.", licence, choiceMessage)
 }
 func CalculateResellPrice(originalPrice float64, age float64) {
+	var calculatedPrice float64
+	if age < 3 {
+		calculatedPrice = originalPrice * 0.8
+	} else if age >= 3 && age < 10 {
+		calculatedPrice = originalPrice * 0.3
+	} else {
+		calculatedPrice = originalPrice * 0.5
+	}
+	fmt.Printf("%f estimated price.", calculatedPrice)
 
 }
 
